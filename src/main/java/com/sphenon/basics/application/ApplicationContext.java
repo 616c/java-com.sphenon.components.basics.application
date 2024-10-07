@@ -1,7 +1,7 @@
 package com.sphenon.basics.application;
 
 /****************************************************************************
-  Copyright 2001-2018 Sphenon GmbH
+  Copyright 2001-2024 Sphenon GmbH
 
   Licensed under the Apache License, Version 2.0 (the "License"); you may not
   use this file except in compliance with the License. You may obtain a copy
@@ -19,6 +19,9 @@ import com.sphenon.basics.message.*;
 import com.sphenon.basics.exception.*;
 import com.sphenon.basics.customary.*;
 import com.sphenon.basics.configuration.*;
+
+import java.util.Map;
+import java.util.HashMap;
 
 public class ApplicationContext extends SpecificContext {
 
@@ -107,6 +110,27 @@ public class ApplicationContext extends SpecificContext {
                   : (application_context = (ApplicationContext) this.getCallContext(ApplicationContext.class)) != null ?
                        application_context.getApplicationMessageExchange(cc)
                      : null
+               );
+    }
+
+    protected Map<Class,ApplicationClient> application_clients_by_class;
+
+    public void setApplicationClient(CallContext context, ApplicationClient application_client, Class application_client_class) {
+        if (this.application_clients_by_class == null) {
+            this.application_clients_by_class = new HashMap<Class,ApplicationClient>();
+        }
+        this.application_clients_by_class.put(application_client_class, application_client);
+    }
+
+    public<T extends ApplicationClient> T getApplicationClient(CallContext cc, Class<T> application_client_class) {
+        ApplicationContext application_context;
+        T result = null;
+        return ( (    this.application_clients_by_class != null
+                   && (result = (T) this.application_clients_by_class.get(application_client_class)) != null
+                 ) ? result
+                   : (application_context = (ApplicationContext) this.getCallContext(ApplicationContext.class)) != null ?
+                        application_context.getApplicationClient(cc, application_client_class)
+                      : null
                );
     }
 

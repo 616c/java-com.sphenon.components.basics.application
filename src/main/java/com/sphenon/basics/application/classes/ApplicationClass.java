@@ -1,7 +1,7 @@
 package com.sphenon.basics.application.classes;
 
 /****************************************************************************
-  Copyright 2001-2018 Sphenon GmbH
+  Copyright 2001-2024 Sphenon GmbH
 
   Licensed under the Apache License, Version 2.0 (the "License"); you may not
   use this file except in compliance with the License. You may obtain a copy
@@ -423,7 +423,8 @@ public class ApplicationClass implements Application {
                 return;
             }
         }
-        System.err.println("*** CAUTION - NO APPLICATION COMPONENT HANDLED THIS EXCEPTION ***");
-        throwable.printStackTrace();
+        
+        SystemContext.err.println(context, "*** CAUTION - NO APPLICATION COMPONENT HANDLED THIS EXCEPTION ***");
+        throwable.printStackTrace(SystemContext.err.stream(context));
     }
 }
